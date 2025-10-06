@@ -8,20 +8,6 @@ jobs:
     runs-on: windows-2022
 
     steps:
-      - name: Create Local Administrator
-        shell: pwsh
-        run: |
-          Write-Host "👤 Creating admin user..."
-          $username = "admin"
-          $password = ConvertTo-SecureString "Khodoan@135246!" -AsPlainText -Force
-          try {
-            New-LocalUser -Name $username -Password $password -FullName "Remote Admin" -Description "RDP Access Account"
-          } catch {
-            Write-Host "⚠️ User already exists — continuing..."
-          }
-          Add-LocalGroupMember -Group "Administrators" -Member $username
-          Write-Host "✅ User '$username' added to Administrators."
-
       - name: Install Remotely Agent
         shell: pwsh
         run: |

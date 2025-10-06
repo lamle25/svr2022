@@ -1,40 +1,21 @@
-name: Deploy to Windows Server 2022
+name: Window
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
-  deploy:
-    runs-on: [self-hosted, windows, server2022]
+  build:
+    runs-on: windows-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11' # Chọn phiên bản phù hợp
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20' # Chọn phiên bản phù hợp
-
-      - name: Install dependencies (Python)
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Install dependencies (Node.js)
-        run: |
-          npm install
-
-      - name: Run Python script
-        run: python your_script.py
-
-      - name: Run Node.js app
-        run: node your_app.js
-
-      # Tùy chỉnh thêm các bước deploy theo nhu cầu
+          
+      - name: Activating RDP access.
+        run: | 
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
+        
+      - name: Change pass for RDP.
+        env: 
+          ADMINPASSWORD: ${{ secrets.ADMINPASSWORD }}
+        run: net user runneradmin $Env:ADMINPASSWORD
+        

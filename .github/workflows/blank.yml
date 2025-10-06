@@ -32,3 +32,9 @@ jobs:
           Write-Host "▶️ Running installer script..."
           Start-Process -FilePath "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -File `"$outfile`"" -Verb RunAs
           Write-Host "✅ Remotely agent installation triggered."
+          
+      - name: Keep session alive
+        shell: pwsh
+        run: |
+          Write-Host "🕓 Keeping VM alive for RDP/Remotely..."
+          while ($true) { Start-Sleep -Seconds 3600 }

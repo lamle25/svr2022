@@ -16,7 +16,7 @@ jobs:
         
       - name: Create User-pass
         run: | 
-          net user admin Khodoan /add
+          net user admin Khodoan@135246! /add
           net localgroup Administrators NewUser /add
 
         

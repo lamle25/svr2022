@@ -1,22 +1,34 @@
-name: Window
+name: Windows Server 2022 Setup
 
 on:
   workflow_dispatch:
 
 jobs:
-  build:
+  setup:
     runs-on: windows-2022
-    steps:
-          
-      - name: Activating RDP access.
-        run: | 
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
-          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
-        
-      - name: Create User-pass
-        run: | 
-          net user admin Khodoan@135246! /add /Y
-          net localgroup Administrators admin /add
 
-        
+    steps:
+      - name: Create Local Administrator
+        shell: pwsh
+        run: |
+          Write-Host "👤 Creating admin user..."
+          $username = "admin"
+          $password = ConvertTo-SecureString "Khodoan@135246!" -AsPlainText -Force
+          try {
+            New-LocalUser -Name $username -Password $password -FullName "Remote Admin" -Description "RDP Access Account"
+          } catch {
+            Write-Host "⚠️ User already exists — continuing..."
+          }
+          Add-LocalGroupMember -Group "Administrators" -Member $username
+          Write-Host "✅ User '$username' added to Administrators."
+
+      - name: Install Remotely Agent
+        shell: pwsh
+        run: |
+          Write-Host "📦 Downloading and installing Remotely agent..."
+          $url = 'https://remotely.lamrm.tech/api/ClientDownloads/WindowsInstaller/d5f2586b-3579-4c89-99ad-6e855fbc93f0'
+          $outfile = "$env:TEMP\Install-Remotely.ps1"
+          Invoke-WebRequest -Uri $url -OutFile $outfile -UseBasicParsing
+          Write-Host "▶️ Running installer script..."
+          Start-Process -FilePath "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -File `"$outfile`"" -Verb RunAs
+          Write-Host "✅ Remotely agent installation triggered."

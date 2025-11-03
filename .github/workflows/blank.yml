@@ -13,7 +13,7 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "📦 Downloading and installing Remotely agent..."
-          $url = 'https://remotely.lamrm.tech/api/ClientDownloads/WindowsInstaller/d5f2586b-3579-4c89-99ad-6e855fbc93f0'
+          $url = 'https://lamle.dpdns.org/api/ClientDownloads/WindowsInstaller/d5f2586b-3579-4c89-99ad-6e855fbc93f0'          
           $outfile = "$env:TEMP\Install-Remotely.ps1"
           Invoke-WebRequest -Uri $url -OutFile $outfile -UseBasicParsing
           Write-Host "▶️ Running installer script..."

